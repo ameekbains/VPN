@@ -1,0 +1,27 @@
+# Start VPN server
+sudo python3 src/server.py --config config/server.conf
+
+# Enable kernel IP forwarding
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# Configure NAT rules
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i tun0 -j ACCEPT
+
+
+# Connect to VPN
+sudo python3 src/client.py --config config/client.conf
+
+# Verify connection
+ip addr show tun0
+ping 10.8.0.1
+
+#advanced
+# Generate new cryptographic identities
+python3 tools/generate-keys.py
+
+# Perform security audit
+python3 tools/audit.py --config config/server.conf
+
+# Monitor VPN traffic
+sudo tcpdump -ni tun0 -w vpn-traffic.pcap
