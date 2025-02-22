@@ -1,0 +1,15 @@
+#Testing Checklist
+
+##Connectivity Test
+ping 10.8.0.1  # From client
+curl ifconfig.me  # Should show server IP
+
+##DNS Test
+nslookup example.com
+
+##Leak Test
+tcpdump -ni tun0  # Verify all traffic is encrypted
+
+##Stress Test
+iperf3 -c 10.8.0.1  # Bandwidth test
+
